@@ -316,22 +316,26 @@
   function drawPlayer() {
     ctx.fillStyle = "#0f0";
     const image = document.getElementById("source");
-    if(Math.abs(imgX-Xpos) >= 2 || Math.abs(imgY-Ypos) >= 2) {
+    var spd = .1;
+    if(Math.abs(imgX-Xpos) >= 3.5 || Math.abs(imgY-Ypos) >= 3.5) {
         imgX=Xpos;
         imgY=Ypos;
     }
-    if(imgX < Xpos-.05) {
-        imgX += .1;
+    else if(Math.abs(imgX-Xpos) >= 2 || Math.abs(imgY-Ypos) >= 2) {
+        spd = .2;
     }
-    else if(imgX > Xpos + .05) {
-        imgX -= .1;
+    if(imgX < Xpos-spd/2) {
+        imgX += spd;
+    }
+    else if(imgX > Xpos + spd/2) {
+        imgX -= spd;
     }
     else imgX = Xpos;
-    if(imgY < Ypos - .05) {
-        imgY += .1;
+    if(imgY < Ypos - spd/2) {
+        imgY += spd;
     }
-    else if(imgY > Ypos + .05) {
-        imgY -= .1;
+    else if(imgY > Ypos + spd/2) {
+        imgY -= spd;
     }
     else imgY = Ypos;
     ctx.drawImage(
