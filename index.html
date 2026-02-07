@@ -17,6 +17,15 @@ canvas {
 
 <body>
 <canvas id="c"></canvas>
+
+<div class="hidden">
+  <img
+    id="source"
+    src="https://raw.githubusercontent.com/SuperIronDragon/SuperIronDragon/refs/heads/main/scotty_1_20x20.bmp"
+    width="20"
+    height="20" />
+</div>
+
 </body>
 
 <script>
@@ -35,6 +44,8 @@ function resize() {
 }
 addEventListener("resize", resize);
 resize();
+
+
 
 /* ================= GAME STATE ================= */
 
@@ -126,7 +137,7 @@ function drawMaze() {
   ctx.fillStyle = "#111";
   ctx.fillRect(vOff, 0, s * n, s * n);
 
-  ctx.strokeStyle = "#444";
+  ctx.strokeStyle = "#666";
   ctx.lineWidth = 2;
   ctx.beginPath();
 
@@ -145,15 +156,19 @@ function drawMaze() {
       }
 
   ctx.stroke();
-
+    
   // player
   ctx.fillStyle = "#0f0";
-  ctx.fillRect(
+  const image = document.getElementById("source");
+  ctx.drawImage(image, vOff + Xpos * s + s * 0.3,
+    Ypos * s + s * 0.3,
+    s * 0.4,s * 0.4);
+  /*ctx.fillRect(
     vOff + Xpos * s + s * 0.3,
     Ypos * s + s * 0.3,
     s * 0.4,
     s * 0.4
-  );
+  );*/
 }
 
 function drawFog(){
@@ -165,7 +180,7 @@ function drawFog(){
   ctx.fillRect(0 + vOff-1,0,(s+1)*n,(Ypos - visibility) * (s))
   ctx.fillRect((Xpos - visibility) * s + vOff,(Ypos + visibility+1) * s,(s+1)*(n-(Xpos - visibility)),s*(n-(Ypos + visibility)))
   ctx.fillRect((Xpos + visibility+1) * s + vOff,(Ypos - visibility) * s,(s+1)*(n-(Xpos + visibility)),s*(n-(Ypos - visibility)))
-  ctx.fillStyle="rgba(0,0,0,.7)"
+  ctx.fillStyle="rgba(0,0,0,.5)"
   ctx.globalCompositeOperation="destination-out"
 
   ctx.beginPath()
