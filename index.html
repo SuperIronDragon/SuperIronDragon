@@ -25,6 +25,13 @@ canvas {
     width="20"
     height="20" />
 </div>
+<div class="hidden">
+    <img
+      id="treat"
+      src="https://raw.githubusercontent.com/SuperIronDragon/SuperIronDragon/refs/heads/main/dogtreat.bmp"
+      width="17"
+      height="17" />
+  </div>
 
 </body>
 
@@ -162,6 +169,13 @@ function drawMaze() {
   const image = document.getElementById("source");
   ctx.drawImage(image, vOff + Xpos * s + s * 0.3,
     Ypos * s + s * 0.3,
+    s * 0.4,s * 0.4);
+
+  // treat
+  ctx.fillStyle = "#0f0";
+  const image2 = document.getElementById("treat");
+  ctx.drawImage(image2, vOff + (n-1) * s + s * 0.3,
+   (n-1) * s + s * 0.3,
     s * 0.4,s * 0.4);
   /*ctx.fillRect(
     vOff + Xpos * s + s * 0.3,
