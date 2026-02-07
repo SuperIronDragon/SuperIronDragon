@@ -7,6 +7,7 @@
     margin: 0;
     padding: 0;
     height: 100%;
+    max-width: 100%;
     overflow: hidden;
     background-color: #000; /* Optional: set a background color */
   }
@@ -16,9 +17,11 @@
   }
 </style>
 <body>
-  <canvas id="c" width="100%" height="100%"></canvas>
+  <canvas id="c"></canvas>
 </body>
 <script>
+  const c = document.getElementById("c");
+  const ctx = c.getContext("2d");
   // notes: call createMaze after every lvl and increment n
 
   let n = 3; // n keeps track of level
@@ -86,15 +89,27 @@
       createMaze();
     }
   }
-
-  const ctx = c.getContext("2d");
-
+  function resize() {
+    const dpr = devicePixelRatio || 1;
+    // CSS size (layout)
+    c.style.width = innerWidth + "px";
+    c.style.height = innerHeight + "px";
+    // internal pixel buffer (drawing resolution)
+    c.width = Math.floor(innerWidth * dpr);
+    c.height = Math.floor(innerHeight * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // draw in CSS pixels
+  }
+  addEventListener("resize", resize);
+  resize();
   function drawMaze() {
-    let s = Math.min(c.width, c.height) / n; // min dimension / n
+    let W = innerWidth,
+      H = innerHeight;
+    let s = Math.min(W, H) / n;
+    let vOff = (W - s * n) / 2;
 
     ctx.clearRect(0, 0, c.width, c.height);
     ctx.fillStyle = "#111";
-    ctx.fillRect(0, 0, s * n, s * n);
+    ctx.fillRect(0 + vOff, 0, s * n, s * n);
 
     ctx.strokeStyle = "#444";
     ctx.lineWidth = 2;
@@ -104,23 +119,28 @@
     for (let x = 0; x < n; x++)
       for (let y = 0; y < n + 1; y++)
         if (HmazeArray[x][y]) {
-          ctx.moveTo(x * s, y * s);
-          ctx.lineTo((x + 1) * s, y * s);
+          ctx.moveTo(x * s + vOff, y * s);
+          ctx.lineTo((x + 1) * s + vOff, y * s);
         }
 
     // vertical walls
     for (let x = 0; x < n + 1; x++)
       for (let y = 0; y < n; y++)
         if (VmazeArray[x][y]) {
-          ctx.moveTo(x * s, y * s);
-          ctx.lineTo(x * s, (y + 1) * s);
+          ctx.moveTo(x * s + vOff, y * s);
+          ctx.lineTo(x * s + vOff, (y + 1) * s);
         }
 
     ctx.stroke();
 
     // player
     ctx.fillStyle = "#0f0";
-    ctx.fillRect(Xpos * s + s * 0.3, Ypos * s + s * 0.3, s * 0.4, s * 0.4);
+    ctx.fillRect(
+      Xpos * s + s * 0.3 + vOff,
+      Ypos * s + s * 0.3,
+      s * 0.4,
+      s * 0.4,
+    );
   }
 
   createMaze();
