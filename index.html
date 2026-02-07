@@ -420,7 +420,7 @@ createMaze();
 var start = new Date().getTime();
 function loop() {
   
-
+    startMusic();
   drawMaze();
   var timeDiff = (new Date().getTime() - start);
   if (timeDiff > 1500 /*&& timeDiff < 1300 || // after 1 sec light, .3 dark
