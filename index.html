@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 
-<head>hi</head>
+<head>hi
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+
+</head>
 
 <canvas id="proceduralCanvas" width="500" height="500"></canvas>
 
-
+<body>
 <script>
     const canvas = document.getElementById('proceduralCanvas');
     const ctx = canvas.getContext('2d');
@@ -16,12 +20,12 @@
 
     var enable = true;
     var press = false;
-    // document.addEventListener('keydown', function(event) {
-    //     if(event.key === 'a') {
-    //         enable = !enable;
-    //         // press = true;
-    //     }
-    // });
+    document.addEventListener('keydown', function(event) {
+        if(event.key === 'a') {
+            enable = !enable;
+            // press = true;
+        }
+    });
     // if (event.key === 'Enter') {
     //     // Code to run when the 'Enter' key is pressed
     //     // console.log('Enter key pressed!');
@@ -31,12 +35,9 @@
     // }
     // });
 
-    // while(true) {
-        
-        // if(!keyDown("a") && press) {
-        //     press = false;
-        // }
-        // if(enable) {
+
+    function staticGen() {
+        if(enable){
             for (let y = 0; y < height; y++) {
                 for (let x = 0; x < width; x++) {
                 // Example: Random noise (Procedural)
@@ -53,9 +54,14 @@
             }
             // Put modified data back to canvas
             ctx.putImageData(imageData, 0, 0);
-        // }
-        
+        }
+    }
+    
+    
     // }
+    setInterval(staticGen, 1000);
+        
     
     
 </script>
+</body>
