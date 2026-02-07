@@ -73,7 +73,8 @@
   let t = 0;
   let lastTime = 0;
   setInterval(() => {
-    timer.textContent = (t += 0.1).toFixed(1) - (lastTime += 0.1).toFixed(1);
+    t++;
+    timer.textContent = ((t - lastTime) / 10).toFixed(1);
   }, 100);
 
   // swipe detection
