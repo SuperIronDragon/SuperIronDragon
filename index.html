@@ -363,27 +363,27 @@
 
     //ctx.fillStyle="rgba(0,0,0,.7)"
     ctx.fillStyle = "#000";
-    ctx.fillRect(0 + vOff - 3, 0, (Xpos - visibility) * (s + 1) + 3, s * n);
-    ctx.fillRect(0 + vOff - 3, 0, (s + 1) * n + 3, (Ypos - visibility) * s);
+    ctx.fillRect(0 + vOff - 3, 0, (imgX - visibility) * (s + 1) + 3, s * n);
+    ctx.fillRect(0 + vOff - 3, 0, (s + 1) * n + 3, (imgY - visibility) * s);
     ctx.fillRect(
-      (Xpos - visibility) * s + vOff,
-      (Ypos + visibility + 1) * s,
-      (s + 1) * (n - (Xpos - visibility)),
-      s * (n - (Ypos + visibility)),
+      (imgX - visibility) * s + vOff,
+      (imgY + visibility + 1) * s,
+      (s + 1) * (n - (imgX - visibility)),
+      s * (n - (imgY + visibility)),
     );
     ctx.fillRect(
-      (Xpos + visibility + 1) * s + vOff,
-      (Ypos - visibility) * s,
-      (s + 1) * (n - (Xpos + visibility)),
-      s * (n - (Ypos - visibility)),
+      (imgX + visibility + 1) * s + vOff,
+      (imgY - visibility) * s,
+      (s + 1) * (n - (imgX + visibility)),
+      s * (n - (imgY - visibility)),
     );
     ctx.fillStyle = "rgba(0,0,0,.5)";
     ctx.globalCompositeOperation = "destination-out";
 
     ctx.beginPath();
     ctx.fillRect(
-      (Xpos - visibility) * s + vOff,
-      (Ypos - visibility) * s,
+      (imgX - visibility) * s + vOff,
+      (imgY - visibility) * s,
       (2 * visibility + 1) * s,
       (2 * visibility + 1) * s,
     );
