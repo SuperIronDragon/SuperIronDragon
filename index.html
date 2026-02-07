@@ -1,6 +1,61 @@
 <!DOCTYPE html>
 
-<head>
-<h1>poop</h1>
+<head>hi</head>
 
-</head>
+<canvas id="proceduralCanvas" width="500" height="500"></canvas>
+
+
+<script>
+    const canvas = document.getElementById('proceduralCanvas');
+    const ctx = canvas.getContext('2d');
+    const width = canvas.width;
+    const height = canvas.height;
+    // Create an ImageData object to manipulate
+    const imageData = ctx.createImageData(width, height);
+    const data = imageData.data; // The pixel array [r,g,b,a, r,g,b,a, ...]
+
+    var enable = true;
+    var press = false;
+    // document.addEventListener('keydown', function(event) {
+    //     if(event.key === 'a') {
+    //         enable = !enable;
+    //         // press = true;
+    //     }
+    // });
+    // if (event.key === 'Enter') {
+    //     // Code to run when the 'Enter' key is pressed
+    //     // console.log('Enter key pressed!');
+    // } else if () {
+    //     // Code to run when the 'a' key is pressed
+    //     // console.log('A key pressed!');
+    // }
+    // });
+
+    // while(true) {
+        
+        // if(!keyDown("a") && press) {
+        //     press = false;
+        // }
+        // if(enable) {
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                // Example: Random noise (Procedural)
+                const index = (y * width + x) * 4;
+                var color = (Math.trunc(Math.random() * 2)) * 255;
+
+
+                data[index] = color;     // Red
+                
+                data[index + 1] = color; // Green
+                data[index + 2] = color; // Blue
+                data[index + 3] = 255;                 // Alpha
+                }
+            }
+            // Put modified data back to canvas
+            ctx.putImageData(imageData, 0, 0);
+        // }
+        
+    // }
+    
+    
+</script>
