@@ -109,6 +109,7 @@ function createMaze() {
     visited[nx][ny] = true;
     stack.push([nx, ny]);
   }
+  flashLights();
 }
 
 /* ================= INPUT ================= */
@@ -210,15 +211,24 @@ function drawFog(){
   ctx.globalCompositeOperation="source-over"
 }
 
+function flashLights(){
+    start = new Date().getTime();
+}
 
 /* ================= LOOP ================= */
 
 createMaze();
-
+var start = new Date().getTime();
 function loop() {
+  
+
   drawMaze();
-  drawFog();
+  if ((new Date().getTime() - start) > 1000){
+    drawFog();
+  }
+  
   requestAnimationFrame(loop);
+
 }
 loop();
 </script>
