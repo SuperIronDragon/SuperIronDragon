@@ -1,39 +1,15 @@
+// music.js
+let A, started
 
-<!doctype html>
-<meta name=viewport content="width=device-width,initial-scale=1">
-<title>Chord Loop</title>
-
-<style>
-html,body{
-  margin:0;
-  height:100%;
-  background:#000;
-  color:#0f0;
-  font:18px monospace;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  user-select:none;
-}
-</style>
-
-<body>
-TAP TO START
-</body>
-
-<script>
-let A,started
-
-onclick=_=>{
-  if(started)return
-  started=1
-  document.body.textContent=""
-  A=new AudioContext
+export function startMusic(){
+  if(started) return
+  started = 1
+  A = new AudioContext()
   music()
 }
 
 // soft pad chord
-function chord(fs,when,len=6,v=.02){
+function chord(fs, when, len=6, v=.02){
   fs.forEach(f=>{
     let o=A.createOscillator(),
         g=A.createGain()
@@ -50,8 +26,8 @@ function chord(fs,when,len=6,v=.02){
   })
 }
 
-// sparse piano-like note
-function note(f,when,len=1.5,v=.015){
+// piano-like note
+function note(f, when, len=1.5, v=.015){
   let o=A.createOscillator(),
       g=A.createGain()
   o.type="sine"
@@ -66,45 +42,35 @@ function note(f,when,len=1.5,v=.015){
 }
 
 // semitone steps → freqs
-steps=(r,a)=>a.map(s=>r*Math.pow(2,s/12))
+let steps=(r,a)=>a.map(s=>r*Math.pow(2,s/12))
 
 function music(){
   let t=A.currentTime,
       bpm=180,
       beat=60/bpm,
       root=230,
-
-      // open, peaceful harmony
       prog=[
-        [0,4,7,12],   // I
-        [0,5,7,12],   // sus4
-        [0,4,9,12],   // add6
-        [0,2,7,12]    // sus2
+        [0,4,7,12],
+        [0,5,7,12],
+        [0,4,9,12],
+        [0,2,7,12]
       ]
 
   let time=t
 
-  // outer loop: slow harmonic movement
   for(let p=0;p<prog.length;p++){
-
     let base=steps(root,prog[p])
-
-    // chord pad
     chord(base,time,8*beat)
 
-    // inner loop: sparse high notes
     for(let i=0;i<4;i++){
-      
-        note(
-          base[(i+p)%base.length]*2,
-          time+(i*2+1)*beat,
-          2*beat
-        )
+      note(
+        base[(i+p)%base.length]*2,
+        time+(i*2+1)*beat,
+        2*beat
+      )
     }
-
     time+=8*beat
   }
 
   setTimeout(music,(time-t)*1000)
 }
-</script>
