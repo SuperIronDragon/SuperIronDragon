@@ -1,0 +1,133 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Maze Game</title>
+<style>
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+    background-color: #000; /* Optional: set a background color */
+  }
+  canvas {
+    display: block; /* Helps avoid extra space issues */
+    height: 100%;
+  }
+</style>
+<body>
+  <canvas id="c" width="100%" height="100%"></canvas>
+</body>
+<script>
+  // notes: call createMaze after every lvl and increment n
+
+  let n = 3; // n keeps track of level
+
+  Xpos = 0; // character position
+  Ypos = 0;
+
+  let HmazeArray = []; // horizontal walls
+  let VmazeArray = []; // verticle walls
+
+  function createMaze() {
+    // reset level
+
+    Xpos = 0; // character position
+    Ypos = 0;
+    HmazeArray = []; // reset arrays
+    VmazeArray = [];
+
+    for (let i = 0; i < n; i++) {
+      // Create an empty inner array for each row
+      HmazeArray.push([]);
+      for (let j = 0; j < n + 1; j++) {
+        HmazeArray[i].push(Math.floor(Math.random() * 2));
+      }
+    }
+
+    for (let i = 0; i < n + 1; i++) {
+      // Create an empty inner array for each row
+      VmazeArray.push([]);
+      for (let j = 0; j < n; j++) {
+        VmazeArray[i].push(Math.floor(Math.random() * 2));
+      }
+    }
+  } // end of createMaze()
+
+  // ---------- INPUT ----------
+  onkeydown = (e) => {
+    if (e.key == "ArrowLeft" && Xpos > 0 && VmazeArray[Xpos][Ypos] == 0)
+      // if we are in the maze and theres no wall
+      Xpos--;
+    if (
+      e.key == "ArrowRight" &&
+      Xpos < n - 1 &&
+      VmazeArray[Xpos + 1][Ypos] == 0
+    )
+      // if we are in the maze and theres no wall
+      Xpos++;
+    if (e.key == "ArrowDown" && Ypos < n - 1 && HmazeArray[Xpos][Ypos + 1] == 0)
+      // if we are in the maze and theres no wall
+      Ypos++;
+    if (e.key == "ArrowUp" && Ypos > 0 && HmazeArray[Xpos][Ypos] == 0)
+      // if we are in the maze and theres no wall
+      Ypos--;
+
+    if (Xpos == Ypos && Xpos == n - 1) {
+      // did we finish the maze?
+      playerWinEvent();
+    }
+  };
+
+  function playerWinEvent() {
+    // do something - advance lvl or win
+    if (n < 10) {
+      n++;
+      createMaze();
+    }
+  }
+
+  const ctx = c.getContext("2d");
+
+  function drawMaze() {
+    let s = Math.min(c.width, c.height) / n; // min dimension / n
+
+    ctx.clearRect(0, 0, c.width, c.height);
+    ctx.fillStyle = "#111";
+    ctx.fillRect(0, 0, s * n, s * n);
+
+    ctx.strokeStyle = "#444";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+
+    // horizontal walls
+    for (let x = 0; x < n; x++)
+      for (let y = 0; y < n + 1; y++)
+        if (HmazeArray[x][y]) {
+          ctx.moveTo(x * s, y * s);
+          ctx.lineTo((x + 1) * s, y * s);
+        }
+
+    // vertical walls
+    for (let x = 0; x < n + 1; x++)
+      for (let y = 0; y < n; y++)
+        if (VmazeArray[x][y]) {
+          ctx.moveTo(x * s, y * s);
+          ctx.lineTo(x * s, (y + 1) * s);
+        }
+
+    ctx.stroke();
+
+    // player
+    ctx.fillStyle = "#0f0";
+    ctx.fillRect(Xpos * s + s * 0.3, Ypos * s + s * 0.3, s * 0.4, s * 0.4);
+  }
+
+  createMaze();
+  // ---------- LOOP ----------
+  function loop() {
+    drawMaze();
+    requestAnimationFrame(loop);
+  }
+  loop();
+</script>
