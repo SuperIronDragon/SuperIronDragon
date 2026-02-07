@@ -363,8 +363,8 @@
 
     //ctx.fillStyle="rgba(0,0,0,.7)"
     ctx.fillStyle = "#000";
-    ctx.fillRect(0 + vOff - 1, 0, (Xpos - visibility) * (s + 1), s * n);
-    ctx.fillRect(0 + vOff - 1, 0, (s + 1) * n, (Ypos - visibility) * s);
+    ctx.fillRect(0 + vOff - 3, 0, (Xpos - visibility) * (s + 1) + 3, s * n);
+    ctx.fillRect(0 + vOff - 3, 0, (s + 1) * n + 3, (Ypos - visibility) * s);
     ctx.fillRect(
       (Xpos - visibility) * s + vOff,
       (Ypos + visibility + 1) * s,
