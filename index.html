@@ -1,183 +1,195 @@
 <!doctype html>
-<meta charset="utf-8">
-<title>Soft Tetris</title>
-<canvas id=c></canvas>
-<script>
-c.width=240
-c.height=240
-ctx=c.getContext("2d")
+<meta charset="utf-8" />
+<title>Maze Game</title>
 
-S=40
-W=6
-H=6
-
-// ---------- GRID ----------
-// grid=[...Array(H)].map(_=>Array(W).fill(0))
-vertWalls=[...Array(H)].map(_=>Array(W-1).fill(0))
-
-// function seededRandom(seed) {
-//     var m = 2**35 - 31;
-//     var a = 185852;
-//     var s = seed % m;
-//     return function () {
-//         s = (s * a) % m;
-//         return s / m;
-//     };
-// }
-
-// // ---------- TEXTURE BASE ----------
-function makeTex(seed){
-  let o=document.createElement("canvas")
-  o.width=o.height=8
-  let x=o.getContext("2d")
-
-  // base
-  for(var i=0; i<8; i++) {
-    for(var j=0; j<8; j++) {
-        
-        var white = false;
-        if(i==0 || j==0 ) {
-            white = true;
-        }
-        if(white) {
-            x.fillStyle="#ffffff";
-        }
-        else x.fillStyle="#000000";
-        x.fillRect(i,j,1,1);
-    }
-  }
-  
-  
-  
-
-//   // subtle grain
-//   x.fillStyle="rgba(255,255,255,.04)"
-//   for(let i=0;i<6;i++)
-//     x.fillRect((i*3+seed)%8,(i*5+seed)%8,1,1)
-
-//   // faint lines
-//   x.fillStyle="rgba(255,255,255,.05)"
-//   x.fillRect(seed%4,0,1,8)
-
-  return ctx.createPattern(o,"repeat")
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #000000;
 }
-
-// 7 extremely similar variants
-TEX=[...Array(7)].map((_,i)=>makeTex(i))
-
-// // ---------- PIECES ----------
-// P=[
-//  [[1,1,1,1]],
-//  [[1,1],[1,1]],
-//  [[0,1,0],[1,1,1]],
-//  [[0,1,1],[1,1,0]],
-//  [[1,1,0],[0,1,1]],
-//  [[1,0,0],[1,1,1]],
-//  [[0,0,1],[1,1,1]]
-// ]
-
-// function rot(m){
-//   return m[0].map((_,i)=>m.map(r=>r[i]).reverse())
-// }
-
-// // ---------- STATE ----------
-p=null
-px=0
-py=0
-pt=0
-tick=0
-
-// function spawn(){
-//   pt=0|Math.random()*7
-//   p=P[pt]
-//   px=3
-//   py=0
-// }
-// spawn()
-
-// // ---------- COLLISION ----------
-// function hit(nx,ny,nm){
-//   for(let y=0;y<nm.length;y++)
-//     for(let x=0;x<nm[y].length;x++)
-//       if(nm[y][x]){
-//         if(
-//           nx+x<0 ||
-//           nx+x>=W ||
-//           ny+y>=H ||
-//           grid[ny+y]?.[nx+x]
-//         ) return 1
-//       }
-// }
-
-// // ---------- LOCK ----------
-// function lock(){
-//   for(let y=0;y<p.length;y++)
-//     for(let x=0;x<p[y].length;x++)
-//       if(p[y][x])
-//         grid[py+y][px+x]=pt+1
-//   clearLines()
-//   spawn()
-// }
-
-// // ---------- CLEAR ----------
-// function clearLines(){
-//   for(let y=H-1;y>=0;y--)
-//     if(grid[y].every(v=>v)){
-//       grid.splice(y,1)
-//       grid.unshift(Array(W).fill(0))
-//       y++
-//     }
-// }
-
-// // ---------- INPUT ----------
-// onkeydown=e=>{
-//   if(e.key=="ArrowLeft"&&!hit(px-1,py,p))px--
-//   if(e.key=="ArrowRight"&&!hit(px+1,py,p))px++
-//   if(e.key=="ArrowDown"&&!hit(px,py+1,p))py++
-//   if(e.key=="ArrowUp"){
-//     let r=rot(p)
-//     if(!hit(px,py,r))p=r
-//   }
-// }
-
-// ---------- LOOP ----------
-function loop(){
-  // background
-  ctx.fillStyle="#1e1e1e"
-  ctx.fillRect(0,0,c.width,c.height)
-
-//   // soft noise
-//   ctx.fillStyle="rgba(255,255,255,.015)"
-//   for(let i=0;i<60;i++)
-//     ctx.fillRect(Math.random()*c.width,Math.random()*c.height,1,1)
-
-//   // gravity
-//   if(++tick>30){
-//     tick=0
-//     if(!hit(px,py+1,p))py++
-//     else lock()
-//   }
-
-  // grid
-  for(let y=0;y<H;y++)
-    for(let x=0;x<W;x++) {
-      
-        ctx.fillStyle=TEX[1]
-        ctx.fillRect(x*S,y*S,S,S)
-    }
-      
-
-//   // active piece
-//   ctx.fillStyle=TEX[pt]
-//   for(let y=0;y<p.length;y++)
-//     for(let x=0;x<p[y].length;x++)
-//       if(p[y][x])
-//         ctx.fillRect((px+x)*S,(py+y)*S,S,S)
-
-  requestAnimationFrame(loop)
+canvas {
+  display: block;
 }
-loop()
+</style>
 
-</script>
-
+<body>
+<canvas id="c"></canvas>
 </body>
+
+<script>
+/* ================= CANVAS SETUP ================= */
+
+const c = document.getElementById("c");
+const ctx = c.getContext("2d");
+
+function resize() {
+  const dpr = devicePixelRatio || 1;
+  c.style.width = innerWidth + "px";
+  c.style.height = innerHeight + "px";
+  c.width = innerWidth * dpr;
+  c.height = innerHeight * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+addEventListener("resize", resize);
+resize();
+
+/* ================= GAME STATE ================= */
+
+let n = 5;
+let Xpos = 0, Ypos = 0;
+
+let HmazeArray = [];
+let VmazeArray = [];
+
+let W = innerWidth;
+let H = innerHeight;
+let vOff = (W - Math.min(W, H)) / 2;
+let s = 0;
+
+let visibility = 1.1;
+
+/* ================= MAZE GENERATION ================= */
+/* Randomized DFS (perfect maze) */
+
+function createMaze() {
+  Xpos = 0;
+  Ypos = 0;
+
+  // walls = 1 (present)
+  HmazeArray = Array.from({ length: n }, () => Array(n + 1).fill(1));
+  VmazeArray = Array.from({ length: n + 1 }, () => Array(n).fill(1));
+
+  const visited = Array.from({ length: n }, () => Array(n).fill(false));
+  const stack = [[0, 0]];
+  visited[0][0] = true;
+
+  while (stack.length) {
+    const [x, y] = stack[stack.length - 1];
+
+    const neighbors = [];
+    if (x > 0 && !visited[x - 1][y]) neighbors.push([x - 1, y, 0]);
+    if (x < n - 1 && !visited[x + 1][y]) neighbors.push([x + 1, y, 1]);
+    if (y > 0 && !visited[x][y - 1]) neighbors.push([x, y - 1, 2]);
+    if (y < n - 1 && !visited[x][y + 1]) neighbors.push([x, y + 1, 3]);
+
+    if (neighbors.length === 0) {
+      stack.pop();
+      continue;
+    }
+
+    const [nx, ny, dir] = neighbors[Math.floor(Math.random() * neighbors.length)];
+
+    // remove wall
+    if (dir === 0) VmazeArray[x][y] = 0;           // west
+    if (dir === 1) VmazeArray[x + 1][y] = 0;       // east
+    if (dir === 2) HmazeArray[x][y] = 0;           // north
+    if (dir === 3) HmazeArray[x][y + 1] = 0;       // south
+
+    visited[nx][ny] = true;
+    stack.push([nx, ny]);
+  }
+}
+
+/* ================= INPUT ================= */
+
+onkeydown = e => {
+  if (e.key === "ArrowLeft" && Xpos > 0 && VmazeArray[Xpos][Ypos] === 0) Xpos--;
+  if (e.key === "ArrowRight" && Xpos < n - 1 && VmazeArray[Xpos + 1][Ypos] === 0) Xpos++;
+  if (e.key === "ArrowUp" && Ypos > 0 && HmazeArray[Xpos][Ypos] === 0) Ypos--;
+  if (e.key === "ArrowDown" && Ypos < n - 1 && HmazeArray[Xpos][Ypos + 1] === 0) Ypos++;
+
+  if (Xpos === n - 1 && Ypos === n - 1) playerWinEvent();
+};
+
+function playerWinEvent() {
+  if (n < 20) {
+    n++;
+    createMaze();
+  } else {
+    alert("You win!");
+  }
+}
+
+/* ================= RENDERING ================= */
+
+function drawMaze() {
+  W = innerWidth;
+  H = innerHeight;
+  vOff = (W - Math.min(W, H)) / 2;
+  s = Math.min(W, H) / n;
+
+  ctx.clearRect(0, 0, c.width, c.height);
+
+  ctx.fillStyle = "#111";
+  ctx.fillRect(vOff, 0, s * n, s * n);
+
+  ctx.strokeStyle = "#444";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+
+  for (let x = 0; x < n; x++)
+    for (let y = 0; y < n + 1; y++)
+      if (HmazeArray[x][y]) {
+        ctx.moveTo(vOff + x * s, y * s);
+        ctx.lineTo(vOff + (x + 1) * s, y * s);
+      }
+
+  for (let x = 0; x < n + 1; x++)
+    for (let y = 0; y < n; y++)
+      if (VmazeArray[x][y]) {
+        ctx.moveTo(vOff + x * s, y * s);
+        ctx.lineTo(vOff + x * s, (y + 1) * s);
+      }
+
+  ctx.stroke();
+
+  // player
+  ctx.fillStyle = "#0f0";
+  ctx.fillRect(
+    vOff + Xpos * s + s * 0.3,
+    Ypos * s + s * 0.3,
+    s * 0.4,
+    s * 0.4
+  );
+}
+
+function drawFog(){
+  s = Math.min(W,H)/n;
+
+  //ctx.fillStyle="rgba(0,0,0,.7)"
+  ctx.fillStyle="#000"
+  ctx.fillRect(0 + vOff-1,0,(Xpos - visibility) * (s+1),(s)*n)
+  ctx.fillRect(0 + vOff-1,0,(s+1)*n,(Ypos - visibility) * (s))
+  ctx.fillRect((Xpos - visibility) * s + vOff,(Ypos + visibility+1) * s,(s+1)*(n-(Xpos - visibility)),s*(n-(Ypos + visibility)))
+  ctx.fillRect((Xpos + visibility+1) * s + vOff,(Ypos - visibility) * s,(s+1)*(n-(Xpos + visibility)),s*(n-(Ypos - visibility)))
+  ctx.fillStyle="rgba(0,0,0,.7)"
+  ctx.globalCompositeOperation="destination-out"
+
+  ctx.beginPath()
+  ctx.fillRect(
+    (Xpos - visibility) * s + vOff,
+    (Ypos - visibility) * s,
+    (2*visibility + 1) * s,
+    (2*visibility + 1) * s
+  )
+
+  ctx.fill()
+
+  ctx.globalCompositeOperation="source-over"
+}
+
+
+/* ================= LOOP ================= */
+
+createMaze();
+
+function loop() {
+  drawMaze();
+  drawFog();
+  requestAnimationFrame(loop);
+}
+loop();
+</script>
