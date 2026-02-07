@@ -223,7 +223,10 @@ function loop() {
   
 
   drawMaze();
-  if ((new Date().getTime() - start) > 1000){
+  var timeDiff = (new Date().getTime() - start);
+  if (timeDiff > 1000 && timeDiff < 1300 ||
+     timeDiff > 1500 && timeDiff < 1700 ||
+     timeDiff > 1800){
     drawFog();
   }
   
