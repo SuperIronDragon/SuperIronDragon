@@ -4,15 +4,16 @@
 <canvas id=c></canvas>
 <script>
 c.width=240
-c.height=400
+c.height=240
 ctx=c.getContext("2d")
 
-S=20
-W=12
-H=20
+S=40
+W=6
+H=6
 
 // ---------- GRID ----------
-grid=[...Array(H)].map(_=>Array(W).fill(0))
+// grid=[...Array(H)].map(_=>Array(W).fill(0))
+vertWalls=[...Array(H)].map(_=>Array(W-1).fill(0))
 
 // function seededRandom(seed) {
 //     var m = 2**35 - 31;
