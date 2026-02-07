@@ -61,7 +61,11 @@
   </div>
 </body>
 
-<script>
+<script type = "module">
+    
+    import {startMusic} from "./music.js";
+    startMusic();
+    
   /* ================= CANVAS SETUP ================= */
 
   const c = document.getElementById("c");
@@ -160,6 +164,8 @@
   let n = 5;
   let Xpos = 0,
     Ypos = 0;
+  let imgX = 0;
+  let imgY = 0;
 
   lastTime = t;
 
@@ -171,6 +177,8 @@
   let vOff = (W - Math.min(W, H)) / 2;
   let s = 0;
 
+  // 1.1: 3x3
+  // 0.1: 1x1
   let visibility = 1.1;
 
   /* ================= MAZE GENERATION ================= */
@@ -262,7 +270,7 @@
     ctx.fillRect(vOff, 0, s * n, s * n);
 
     ctx.strokeStyle = "#666";
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 4;
     ctx.beginPath();
 
     for (let x = 0; x < n; x++)
@@ -282,6 +290,7 @@
     ctx.stroke();
 
     // player
+    drawHalo();
     ctx.fillStyle = "#0f0";
     const image = document.getElementById("source");
     ctx.drawImage(
@@ -291,6 +300,7 @@
       s * 0.4,
       s * 0.4,
     );
+    
 
     // treat
     ctx.fillStyle = "#0f0";
@@ -308,6 +318,21 @@
     s * 0.4,
     s * 0.4
   );*/
+  }
+
+  function drawHalo() {
+    ctx.strokeStyle = "#ffff";
+    var baseStr = "#fff";
+    var hexStr = "0123456789abcdef";
+    var scale = .05;
+    ctx.lineWidth = s*scale;
+    for(let i=0; i<16; i++) {
+        ctx.strokeStyle = baseStr + hexStr.substr(15-i, 1);
+        ctx.beginPath();
+        ctx.arc(vOff + Xpos * s + s * 0.5, Ypos * s + s * 0.5, s*scale*(i+1), 0, 2 * Math.PI);
+        ctx.stroke();
+    }
+    
   }
 
   function drawFog() {
@@ -358,9 +383,9 @@ function loop() {
 
   drawMaze();
   var timeDiff = (new Date().getTime() - start);
-  if (timeDiff > 1000 && timeDiff < 1300 ||
-     timeDiff > 1500 && timeDiff < 1700 ||
-     timeDiff > 1800){
+  if (timeDiff > 1500 /*&& timeDiff < 1300 || // after 1 sec light, .3 dark
+     timeDiff > 1500 && timeDiff < 1700 || // then .2 light and .2 dark
+     timeDiff > 1800 */){ // then .1 light and then forever dark
     drawFog();
   }
   
