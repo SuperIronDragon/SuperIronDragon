@@ -39,7 +39,7 @@ function createMaze() {
     var frontierArr = [];
     var startCol=0;
     var startRow=0;
-    console.log(startCol + "  " + startRow);
+    // console.log(startCol + "  " + startRow);
     gridArr[startCol][startRow] = 0;
     if(startCol>0) {
       gridArr[startCol-1][startRow] = 1;
@@ -62,9 +62,9 @@ function createMaze() {
     while(frontierArr.length > 0) {
       var currPos = frontierArr.splice(Math.floor(Math.random() * frontierArr.length), 1)[0];
       var validAdj = [];
-      console.log("loop iter " + i);
+      // console.log("loop iter " + i);
       i++;
-      console.log(currPos);
+      // console.log(currPos);
       gridArr[currPos[0]][currPos[1]] = 0;
       
       if(currPos[0]>0) { // w=0
