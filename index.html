@@ -161,7 +161,7 @@
 
   /* ================= GAME STATE ================= */
 
-  let n = 5;
+  let n = 8;
   let Xpos = 0,
     Ypos = 0;
   let imgX = 0;
@@ -317,12 +317,15 @@
     ctx.fillStyle = "#0f0";
     const image = document.getElementById("source");
     var spd = .1;
-    if(Math.abs(imgX-Xpos) >= 3.5 || Math.abs(imgY-Ypos) >= 3.5) {
+    if(Math.abs(imgX-Xpos) >= n-1.5 || Math.abs(imgY-Ypos) >= n-1.5) {
         imgX=Xpos;
         imgY=Ypos;
     }
     else if(Math.abs(imgX-Xpos) >= 2 || Math.abs(imgY-Ypos) >= 2) {
-        spd = .2;
+        if(Math.abs(imgY-Ypos) > Math.abs(imgX-Xpos))
+            spd = Math.abs(imgY-Ypos)/10.0;
+        else
+            spd = Math.abs(imgX-Xpos)/10.0;
     }
     if(imgX < Xpos-spd/2) {
         imgX += spd;
