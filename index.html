@@ -17,7 +17,7 @@
     z-index: 10;
     touch-action: none; /* stop browser gestures on mobile */
   }
-  #timer,
+  #timer, #lvlctr,
   #outputWrap {
     position: fixed;
     z-index: 20; /* above swipe area if you want text clickable/visible */
@@ -28,6 +28,9 @@
       sans-serif;
   }
   #timer {
+    top: 24px;
+  }
+  #lvlctr {
     top: 8px;
   }
   #outputWrap {
@@ -41,6 +44,7 @@
 <body>
   <canvas id="c"></canvas>
   <div id="swipeArea"></div>
+  <div id="lvlctr">Level</div>
   <div id="timer">timer</div>
   <div id="outputWrap"></div>
   <div class="hidden">
@@ -72,6 +76,7 @@
   const ctx = c.getContext("2d");
   const swipeArea = document.getElementById("swipeArea");
   const timer = document.getElementById("timer");
+  const lvlctr = document.getElementById("lvlctr");
 
   // timer
   let t = 0;
@@ -162,6 +167,8 @@
   /* ================= GAME STATE ================= */
 
   let n = 8;
+  let numLevels = 5;
+  let startN = n;
   let Xpos = 0,
     Ypos = 0;
   let imgX = 0;
@@ -248,7 +255,8 @@
   };
 
   function playerWinEvent() {
-    if (n < 20) {
+    if (n < startN + numLevels-1) {
+        t=0;
       n++;
       createMaze();
     } else {
@@ -259,6 +267,8 @@
   /* ================= RENDERING ================= */
 
   function drawMaze() {
+    lvlctr.textContent = "Level " + (n - startN + 1);
+
     W = innerWidth;
     H = innerHeight;
     vOff = (W - Math.min(W, H)) / 2;
